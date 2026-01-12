@@ -1,0 +1,130 @@
+<div class="header pb-8 pt-8 pt-md-8">
+  <div class="container-fluid">
+
+  </div>
+</div>
+  
+  <!-- Page content -->
+  <div class="container margin-nav">
+
+    <div class="sub-header">
+      <div class="row">
+        <div class="col-sm-7">
+          <h1>Welcome {{name}} <span class="badge badge-secondary cursor" style="font-size: small;">{{role}}</span></h1>  
+          <span>Dashboard / Games / Rummy Format</span>
+        </div>
+        <div class="col-sm-5" *ngIf="checkScope('add_match_type') == true">
+          <div class="add-btn-contain">
+            <button type="button" class="add-btn" (click)="addData()">
+              Create Format
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+  
+          <div class="row">
+            <div class="col">
+              <div class="card-sub-header border-0">
+                <label for="per-page">Show: </label>
+                <select id="per-page" (change)="onLimitChange($event.target.value)" > 
+                  <option *ngFor="let option of pageLimitOptions" [value]="option.value" [selected]="option.value == currentPageLimit">
+                    {{ option.value }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card-sub-header border-0 left">
+                <label for="search">Search: </label>
+                <input type="text" placeholder="Search...." class="search-input" (keyup)="updateFilter($event)"/>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col">
+              <ngx-datatable #table class="material" [limit]="10" [columnMode]="'force'"  [headerHeight]="65" [footerHeight]="50" [rowHeight]="'auto'" [rows]="getData" >
+  
+                <ngx-datatable-column  [sortable]="false" [draggable]="false" [resizeable]="false" name="S.No" [width]="'auto'">
+                  <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                   {{rowIndex+1}}
+                  </ng-template> 
+                </ngx-datatable-column>
+            
+                <ngx-datatable-column [draggable]="false" [resizeable]="false" name="Name" prop="name" [width]="'auto'">
+                  <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+                    <div class="fixlen" title="{{value}}">  {{value}} </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column  [sortable]="false" [draggable]="false" [resizeable]="false" name="Description" prop="description" [width]="'auto'">
+                    <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+                      <div class="fixlen" title="{{value}}">  {{value}} </div>
+                    </ng-template>
+                </ngx-datatable-column>
+  
+                <ngx-datatable-column  [sortable]="false" [draggable]="false" *ngIf="checkScope('status_match_type') == true" [resizeable]="false" name="Status" prop="active" [width]="'auto'">
+                  <ng-template  ngx-datatable-cell-template let-value="value" let-row="row">
+                    <span class="badge badge-danger cursor" *ngIf="value==0" (click)="changeStatus(row)">InActive</span>
+                    <span class="badge badge-success cursor" *ngIf="value==1" (click)="changeStatus(row)">Active</span>
+                  </ng-template>
+                </ngx-datatable-column>
+                    
+                <ngx-datatable-column  [sortable]="false" [sortable]="false" [draggable]="false" [resizeable]="false"  name="Action" [width]="'auto'">
+                  <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+                    <ng-template #edit>Edit</ng-template>
+                    <a class="btn btn-primary btn-icon-only" *ngIf="checkScope('edit_match_type') == true" [ngbTooltip]="edit" placement="bottom" (click)="updateData(row)">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <ng-template #type>Set FormatTypes</ng-template>
+                    <a class="btn btn-info btn-icon-only" *ngIf="checkScope('edit_match_type') == true" [ngbTooltip]="type" placement="bottom" (click)="rummyFormatTypes(row.format_id)">
+                      <i class="fa fa-cubes" aria-hidden="true"></i>
+                    </a>
+                    <!-- <ng-template #delete>Delete</ng-template>
+                    <a class="btn btn-danger btn-icon-only" *ngIf="checkScope('delete_match_type') == true" [ngbTooltip]="delete" placement="bottom" (click)="deleteData(row.id)">
+                      <i class="fas fa-trash"></i>
+                    </a> -->
+
+                   
+                  </ng-template>
+                </ngx-datatable-column>
+          
+                <div class="card-footer py-4">                
+                  <ngx-datatable-footer>
+                    <ng-template
+                      let-rowCount="rowCount"
+                      let-pageSize="pageSize"
+                      let-selectedCount="selectedCount"
+                      let-curPage="curPage"
+                      let-offset="offset"
+                      ngx-datatable-footer-template>
+  
+                      <span>&nbsp; Total : {{rowCount}}</span>
+  
+                      <datatable-pager
+                        [pagerLeftArrowIcon]="'datatable-icon-left'"
+                        [pagerRightArrowIcon]="'datatable-icon-right'"
+                        [pagerPreviousIcon]="'datatable-icon-prev'"
+                        [pagerNextIcon]="'datatable-icon-skip'"
+                        [page]="curPage"
+                        [size]="pageSize"
+                        [count]="rowCount"
+                        (change)="table.onFooterPage($event)">
+                      </datatable-pager>
+                         
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </div>   
+                         
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
